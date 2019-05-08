@@ -1,15 +1,15 @@
-require('dotenv').config();
-
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import graphqlHTTP from 'express-graphql';
 import gql from 'graphql-tag';
+import path from 'path';
 import { buildASTSchema } from 'graphql';
 
 const POSTS = [
-  { author: 'John Doe', body: 'Hello world' },
-  { author: 'Jane Doe', body: 'Hi, planet!' },
+  { car: 'Echo', manufacturer: 'Toyota' },
+  { car: 'Optra', manufacturer: 'Chevrolet' },
+  { car: 'Rio', manufacturer: 'Kia' },
 ];
 
 const schema = buildASTSchema(gql`
@@ -20,8 +20,8 @@ const schema = buildASTSchema(gql`
 
   type Post {
     id: ID
-    author: String
-    body: String
+    car: String
+    manufacturer: String
   }
 
   type Mutation {
@@ -30,8 +30,8 @@ const schema = buildASTSchema(gql`
 
   input PostInput {
     id: ID
-    author: String!
-    body: String!
+    car: String!
+    manufacturer: String!
   }
 `);
 
@@ -40,8 +40,8 @@ const mapPost = (post: {}, id: number) => post && ({ id, ...post });
 const root = {
   post: ({ id }: any) => mapPost(POSTS[id], id),
   posts: () => POSTS.map(mapPost),
-  submitPost: ({ input: { id, author, body } }: { input: {id: number, author: string, body: string }}) => {
-    const post = { author, body };
+  submitPost: ({ input: { id, car, manufacturer } }: { input: {id: number, car: string, manufacturer: string }}) => {
+    const post = { car, manufacturer };
     let index = POSTS.length;
 
     if (id != null && id >= 0 && id < POSTS.length) {
@@ -65,8 +65,11 @@ app.use('/graphql', graphqlHTTP({
   schema,
 }));
 
-const port: string | undefined = process.env.NODE_ENV === 'development' ? process.env.DEV_PORT : process.env.PROD_PORT;
+// Serve the front end automotive application
+const distPath: string = path.join(__dirname, '../../client-automotive', 'build');
+app.use(express.static(distPath));
 
+const port: number = 4000;
 app.listen(port);
 
 /* tslint:disable */
