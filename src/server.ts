@@ -125,30 +125,3 @@ app.listen(port);
 /* tslint:disable */
 console.log(`Running a GraphQL API server at localhost:${port}/graphql`);
 
-// setTimeout(() => {
-//   activeMongoClient.close().then(() => {
-//     console.log('Mongo connection has been closed.');
-//   });
-// }, 3000);
-
-// const closeApp = () => {
-//   console.log('Shutting down server.')
-//   // process.exit(2);
-// }
-
-// // do app specific cleaning before exiting
-// process.on('exit', function () {
-//   closeApp();
-// });
-
-// // catch ctrl+c event and exit normally
-// process.on('SIGINT', function () {
-//   closeApp();
-//   // process.exit(2);
-// });
-
-// //catch uncaught exceptions, trace, then exit normally
-// process.on('uncaughtException', function(e) {
-//   closeApp();
-//   // process.exit(99);
-// });
